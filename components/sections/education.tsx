@@ -26,7 +26,7 @@ const educationData = [
 export const Education = () => {
   return (
     <section id="education" className="relative py-24 px-4">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -52,7 +52,7 @@ export const Education = () => {
               transition={{ delay: index * 0.2, duration: 0.5 }}
             >
               <GlowingCard className="flex gap-6">
-                <div className="hidden shrink-0 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-4 sm:flex">
+                <div className="hidden shrink-0 items-center justify-center rounded-xl border border-white/10 bg-linear-to-br from-cyan-500/10 to-purple-500/10 w-20 h-20 sm:flex flex-none">
                   <div className="text-cyan-400">{edu.icon}</div>
                 </div>
                 <div className="flex-1">

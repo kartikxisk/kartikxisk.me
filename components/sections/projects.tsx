@@ -3,8 +3,51 @@ import { SpotlightCard } from "@/components/ui/spotlight";
 import { GradientText } from "@/components/ui/text-reveal";
 import { motion } from "motion/react";
 import { ExternalLink, Github } from "lucide-react";
+import Image from "next/image";
 
 const projectsData = [
+  {
+    title: "Savant Solutions",
+    subtitle: "Business Consulting Platform",
+    description:
+      "A comprehensive business consulting website offering strategic services including research, IT development, marketing, and sustainability consulting. Features modern animations and responsive design.",
+    tech: ["Next.js", "Framer Motion", "Tailwind CSS", "TypeScript"],
+    features: [
+      "Modern UI with animations",
+      "10+ service pages",
+      "Responsive design",
+    ],
+    image: "/images/project/savantsolution.png",
+    liveUrl: "https://savantsolutions.in/",
+  },
+  {
+    title: "Belsync",
+    subtitle: "AI-Powered E-Commerce & POS Platform",
+    description:
+      "A modern SaaS platform empowering businesses with AI-driven eCommerce solutions, seamless POS integration, and smart automation for streamlined operations and growth.",
+    tech: ["Next.js", "Tailwind CSS", "TypeScript", "AI Integration"],
+    features: [
+      "AI-powered recommendations",
+      "Global server infrastructure",
+      "Integrated ecosystem",
+    ],
+    image: "/images/project/belsync.png",
+    liveUrl: "https://www.belsync.com/",
+  },
+  {
+    title: "ZenCap Fund",
+    subtitle: "Investment Fund Management Platform",
+    description:
+      "A professional website for SEBI-registered Category II Alternative Investment Fund, featuring fund information, team profiles, and investment process documentation.",
+    tech: ["Bootstrap", "JavaScript", "HTML/CSS", "Responsive Design"],
+    features: [
+      "Fund information display",
+      "Team showcase",
+      "Investment process flow",
+    ],
+    image: "/images/project/zencapfund.png",
+    liveUrl: "https://zencapfund.com/",
+  },
   {
     title: "Groupsgyani",
     subtitle: "WhatsApp, Telegram and Discord Directory",
@@ -16,6 +59,7 @@ const projectsData = [
       "Optimized database queries",
       "Intuitive community discovery",
     ],
+    image: "/images/project/groupsgyani.png",
   },
   {
     title: "Library Management System",
@@ -36,31 +80,7 @@ const projectsData = [
       "User management",
       "Optimized database schema",
     ],
-  },
-  {
-    title: "Cyberyami Platform",
-    subtitle: "E-Learning & CTF Integration",
-    description:
-      "Job and Compete module with CTF integration, Micro Learning module, Partner Portal, and Community Forum to enhance user engagement.",
-    tech: ["React.js", "Next.js", "TypeScript", "Tailwind CSS"],
-    features: [
-      "CTF Integration",
-      "Micro Learning",
-      "Community Forum",
-      "Partner Portal",
-    ],
-  },
-  {
-    title: "LevelUp Certification Portal",
-    subtitle: "Windows Examination Application",
-    description:
-      "A Windows-based examination application with integrated proctoring to ensure secure and monitored assessments.",
-    tech: ["Electron.js", "React.js", "Node.js"],
-    features: [
-      "Integrated proctoring",
-      "Secure assessments",
-      "Windows desktop app",
-    ],
+    image: "/images/project/library.png",
   },
 ];
 
@@ -81,6 +101,9 @@ export const Projects = () => {
           <h2 className="text-3xl font-bold text-white md:text-4xl">
             Featured Projects
           </h2>
+          <p className="mx-auto mt-4 max-w-xl text-neutral-400">
+            A showcase of websites and applications I&apos;ve built for clients and personal projects
+          </p>
         </motion.div>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -94,6 +117,20 @@ export const Projects = () => {
             >
               <SpotlightCard className="h-full">
                 <div className="relative z-10">
+                  {/* Project Image */}
+                  {project.image && (
+                    <div className="relative mb-4 overflow-hidden rounded-lg border border-white/10">
+                      <Image
+                        src={project.image}
+                        alt={project.title}
+                        width={600}
+                        height={340}
+                        className="w-full h-64 object-cover object-top transition-transform duration-500 hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
+                    </div>
+                  )}
+
                   <div className="mb-4 flex items-start justify-between">
                     <div>
                       <h3 className="text-xl font-semibold text-white">
@@ -107,9 +144,20 @@ export const Projects = () => {
                       <button className="rounded-lg border border-white/10 bg-white/5 p-2 text-neutral-400 transition-colors hover:bg-white/10 hover:text-white">
                         <Github className="h-4 w-4" />
                       </button>
-                      <button className="rounded-lg border border-white/10 bg-white/5 p-2 text-neutral-400 transition-colors hover:bg-white/10 hover:text-white">
-                        <ExternalLink className="h-4 w-4" />
-                      </button>
+                      {project.liveUrl ? (
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rounded-lg border border-white/10 bg-white/5 p-2 text-neutral-400 transition-colors hover:bg-white/10 hover:text-white"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      ) : (
+                        <button className="rounded-lg border border-white/10 bg-white/5 p-2 text-neutral-400 transition-colors hover:bg-white/10 hover:text-white">
+                          <ExternalLink className="h-4 w-4" />
+                        </button>
+                      )}
                     </div>
                   </div>
 

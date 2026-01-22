@@ -21,7 +21,7 @@ export const Contact = () => {
     {
       icon: <MapPin className="h-5 w-5" />,
       label: "Location",
-      value: "Uttar Pradesh, India",
+      value: "Delhi, India",
       href: null,
     },
   ];
@@ -69,7 +69,7 @@ export const Contact = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <GlowingBorderCard className="h-full">
+            <GlowingBorderCard className="flex flex-col">
               <h3 className="mb-6 text-xl font-semibold text-white">
                 Contact Information
               </h3>
@@ -96,7 +96,7 @@ export const Contact = () => {
                 ))}
               </div>
 
-              <div className="mt-8 border-t border-white/10 pt-6">
+              <div className="border-t border-white/10 pt-6 mt-auto">
                 <h4 className="mb-4 text-sm font-medium uppercase tracking-wider text-neutral-500">
                   Follow Me
                 </h4>
@@ -124,8 +124,8 @@ export const Contact = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.3, duration: 0.5 }}
           >
-            <GlowingBorderCard className="flex h-full flex-col items-center justify-center text-center">
-              <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-white/10 bg-gradient-to-br from-cyan-500/10 to-purple-500/10">
+            <GlowingBorderCard className="flex flex-col items-center justify-center text-center">
+              <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-white/10 bg-linear-to-br from-cyan-500/10 to-purple-500/10">
                 <Send className="h-8 w-8 text-cyan-400" />
               </div>
               <h3 className="mb-2 text-xl font-semibold text-white">
@@ -137,13 +137,13 @@ export const Contact = () => {
               </p>
               <a
                 href="mailto:ki.kartik11@gmail.com?subject=Hello%20Kartik&body=Hi%20Kartik,%0D%0A%0D%0AI%20would%20like%20to%20discuss..."
-                className="group relative overflow-hidden rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 px-8 py-3 font-medium text-white transition-all hover:shadow-lg hover:shadow-cyan-500/25"
+                className="group relative overflow-hidden rounded-full bg-linear-to-r from-cyan-500 to-purple-500 px-8 py-3 font-medium text-white transition-all hover:shadow-lg hover:shadow-cyan-500/25"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   <Mail className="h-4 w-4" />
                   Send Email
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-cyan-500 opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-r from-purple-500 to-cyan-500 opacity-0 transition-opacity group-hover:opacity-100" />
               </a>
               <p className="mt-6 text-sm text-neutral-500">
                 or reach out via{" "}

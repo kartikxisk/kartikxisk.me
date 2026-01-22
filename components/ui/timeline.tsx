@@ -20,7 +20,7 @@ export const Timeline = ({
   return (
     <div className={cn("relative", className)}>
       {/* Vertical line */}
-      <div className="absolute left-4 top-0 h-full w-px bg-gradient-to-b from-cyan-500/50 via-purple-500/50 to-transparent md:left-1/2 md:-translate-x-px" />
+      <div className="absolute left-4 top-0 h-full w-px bg-linear-to-b from-cyan-500/50 via-purple-500/50 to-transparent md:left-1/2 md:-translate-x-px" />
 
       {items.map((item, index) => (
         <motion.div
@@ -46,7 +46,7 @@ export const Timeline = ({
 
           {/* Content card */}
           <div className="group relative">
-            <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 opacity-0 blur transition duration-500 group-hover:opacity-100" />
+            <div className="absolute -inset-0.5 rounded-xl bg-linear-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 opacity-0 blur transition duration-500 group-hover:opacity-100" />
             <div className="relative rounded-xl border border-white/10 bg-black/50 p-6 backdrop-blur-sm">
               <span className="mb-2 inline-block rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs text-cyan-400">
                 {item.date}

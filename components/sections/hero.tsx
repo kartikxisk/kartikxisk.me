@@ -7,7 +7,7 @@ import { Github, Linkedin, Mail, Phone, ChevronDown } from "lucide-react";
 export const Hero = () => {
   const roles = [
     "Frontend Developer",
-    "React.js Expert",
+    "React.js Developer",
     "Next.js Developer",
     "LMS Specialist",
   ];
@@ -43,9 +43,9 @@ export const Hero = () => {
         </h1>
 
         {/* Role with FlipWords */}
-        <div className="mb-8 flex h-12 items-center justify-center text-2xl md:text-3xl">
+        <div className="mb-8 flex h-12 items-center justify-center text-2xl md:text-3xl overflow-hidden">
           <span className="text-neutral-400">I&apos;m a </span>
-          <span className="ml-2">
+          <span className="ml-2 overflow-hidden">
             <FlipWords words={roles} className="font-semibold" />
           </span>
         </div>
@@ -121,10 +121,10 @@ export const Hero = () => {
         >
           <a
             href="#experience"
-            className="group relative overflow-hidden rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 px-8 py-3 font-medium text-white transition-all hover:shadow-lg hover:shadow-cyan-500/25"
+            className="group relative overflow-hidden rounded-full bg-linear-to-r from-cyan-500 to-purple-500 px-8 py-3 font-medium text-white transition-all hover:shadow-lg hover:shadow-cyan-500/25"
           >
             <span className="relative z-10">View My Work</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-cyan-500 opacity-0 transition-opacity group-hover:opacity-100" />
+            <div className="absolute inset-0 bg-linear-to-r from-purple-500 to-cyan-500 opacity-0 transition-opacity group-hover:opacity-100" />
           </a>
           <a
             href="#contact"

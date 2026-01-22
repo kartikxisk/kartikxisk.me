@@ -12,7 +12,7 @@ export const BackgroundGrid = ({
   return (
     <div
       className={cn(
-        "relative w-full bg-black",
+        "relative w-full bg-black overflow-x-hidden",
         className
       )}
     >

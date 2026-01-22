@@ -262,13 +262,13 @@ const BentoCard = ({
       {/* Gradient Overlay */}
       <div
         className={cn(
-          "absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-500 group-hover:opacity-100",
+          "absolute inset-0 bg-linear-to-br opacity-0 transition-opacity duration-500 group-hover:opacity-100",
           category.gradient
         )}
       />
 
       {/* Glow Effect */}
-      <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 blur-sm transition-opacity duration-500 group-hover:opacity-100" />
+      <div className="absolute -inset-px rounded-2xl bg-linear-to-r from-transparent via-white/5 to-transparent opacity-0 blur-sm transition-opacity duration-500 group-hover:opacity-100" />
 
       {/* Content */}
       <div className="relative z-10">
@@ -301,7 +301,7 @@ const BentoCard = ({
 
 export const Skills = () => {
   return (
-    <section id="skills" className="relative py-24 px-4">
+    <section id="skills" className="relative py-24 px-4 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-purple-500/5 blur-3xl" />

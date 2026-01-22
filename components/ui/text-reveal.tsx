@@ -47,7 +47,7 @@ export const GradientText = ({
   return (
     <span
       className={cn(
-        "bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent",
+        "bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent",
         className
       )}
     >
@@ -66,7 +66,7 @@ export const AnimatedUnderline = ({
   return (
     <span className={cn("group relative", className)}>
       {children}
-      <span className="absolute -bottom-1 left-0 h-px w-0 bg-gradient-to-r from-cyan-500 to-purple-500 transition-all duration-300 group-hover:w-full" />
+      <span className="absolute -bottom-1 left-0 h-px w-0 bg-linear-to-r from-cyan-500 to-purple-500 transition-all duration-300 group-hover:w-full" />
     </span>
   );
 };

@@ -60,16 +60,18 @@ export const GlowingCard = ({
 export const GlowingBorderCard = ({
   children,
   className,
+  containerClassName,
 }: {
   children: React.ReactNode;
   className?: string;
+  containerClassName?: string;
 }) => {
   return (
-    <div className="relative group">
-      <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
+    <div className={cn("relative group h-full", containerClassName)}>
+      <div className="absolute -inset-0.5 bg-linear-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
       <div
         className={cn(
-          "relative rounded-xl border border-white/10 bg-black p-6 backdrop-blur-sm",
+          "relative rounded-xl border border-white/10 bg-black p-6 backdrop-blur-sm h-full",
           className
         )}
       >
