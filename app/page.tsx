@@ -1,5 +1,6 @@
 import { BackgroundGrid } from "@/components/ui/background-grid";
 import { FloatingDock } from "@/components/ui/floating-dock";
+import { ForkRepoButton } from "@/components/ui/fork-repo-button";
 import { Hero } from "@/components/sections/hero";
 import { About } from "@/components/sections/about";
 import { Skills } from "@/components/sections/skills";
@@ -56,6 +57,7 @@ export default function Home() {
         <Contact />
       </main>
       <FloatingDock items={navItems} />
+      <ForkRepoButton />
     </BackgroundGrid>
   );
 }
