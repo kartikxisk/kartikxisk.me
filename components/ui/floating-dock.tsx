@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
+import { useScrollVisibility } from "@/lib/hooks/use-scroll-visibility";
 import {
   AnimatePresence,
   MotionValue,
@@ -19,11 +20,17 @@ export const FloatingDock = ({
   desktopClassName?: string;
   mobileClassName?: string;
 }) => {
+  const { isVisible } = useScrollVisibility();
+
   return (
-    <>
-      <FloatingDockDesktop items={items} className={desktopClassName} />
-      <FloatingDockMobile items={items} className={mobileClassName} />
-    </>
+    <AnimatePresence>
+      {isVisible && (
+        <>
+          <FloatingDockDesktop items={items} className={desktopClassName} />
+          <FloatingDockMobile items={items} className={mobileClassName} />
+        </>
+      )}
+    </AnimatePresence>
   );
 };
 
@@ -35,7 +42,11 @@ const FloatingDockMobile = ({
   className?: string;
 }) => {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      transition={{ duration: 0.2 }}
       className={cn(
         "fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 gap-2 rounded-2xl border border-white/10 bg-black/80 p-2 backdrop-blur-md md:hidden",
         className
@@ -50,7 +61,7 @@ const FloatingDockMobile = ({
           <div className="h-5 w-5">{item.icon}</div>
         </a>
       ))}
-    </div>
+    </motion.div>
   );
 };
 
@@ -64,6 +75,10 @@ const FloatingDockDesktop = ({
   const mouseX = useMotionValue(Infinity);
   return (
     <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      transition={{ duration: 0.2 }}
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
