@@ -90,7 +90,7 @@ const experienceData = [
 export const Experience = () => {
   return (
     <section id="experience" className="relative py-24 px-4">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -41,7 +41,7 @@ export const Contact = () => {
 
   return (
     <section id="contact" className="relative py-24 px-4">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -57,7 +57,8 @@ export const Contact = () => {
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-neutral-400">
             I&apos;m currently open to new opportunities. Whether you have a
-            project in mind or just want to chat, feel free to reach out!
+            project in mind, want to hire me, or just want to chat, feel free to
+            reach out!
           </p>
         </motion.div>
 
@@ -96,7 +97,7 @@ export const Contact = () => {
                 ))}
               </div>
 
-              <div className="border-t border-white/10 pt-6 mt-auto">
+              <div className="border-t border-white/10 pt-6 mt-6">
                 <h4 className="mb-4 text-sm font-medium uppercase tracking-wider text-neutral-500">
                   Follow Me
                 </h4>

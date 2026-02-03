@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 export const About = () => {
   return (
     <section id="about" className="relative py-24 px-4">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

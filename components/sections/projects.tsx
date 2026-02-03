@@ -2,7 +2,7 @@
 import { SpotlightCard } from "@/components/ui/spotlight";
 import { GradientText } from "@/components/ui/text-reveal";
 import { motion } from "motion/react";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github as GithubIcon } from "lucide-react";
 import Image from "next/image";
 
 const projectsData = [
@@ -35,6 +35,33 @@ const projectsData = [
     liveUrl: "https://www.belsync.com/",
   },
   {
+    title: "CSV Techno",
+    subtitle: "Property Evaluation System",
+    description:
+      "A data-driven property evaluation system providing real-time analytics and insights for informed decision-making in real estate investments. Features interactive charts and role-based access control.",
+    tech: ["React", "MUI", 'Next.js', "TypeScript","Apache ECharts", 'Api Integration', 'Optimization'],
+    features: [
+      "Real-time case analytics",
+      "Interactive charts & graphs",
+      "Role-based access control",
+    ],
+    image: "/images/project/property-evaluation-system.png",
+  },
+  {
+    title: "The Last Clicks",
+    subtitle: "Creative Services Agency",
+    description:
+      "A modern creative agency website showcasing photography, videography, and editing services. Features elegant dark theme design with smooth animations and a streamlined production process flow.",
+    tech: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
+    features: [
+      "Dark theme with gradient accents",
+      "Service showcase cards",
+      "Stats counter section",
+    ],
+    image: "/images/project/thelastclicks.png",
+    liveUrl: "https://thelastclicks.vercel.app/",
+  },
+  {
     title: "ZenCap Fund",
     subtitle: "Investment Fund Management Platform",
     description:
@@ -60,6 +87,7 @@ const projectsData = [
       "Intuitive community discovery",
     ],
     image: "/images/project/groupsgyani.png",
+    liveUrl: "https://groupsgyani.org/",
   },
   {
     title: "Library Management System",
@@ -81,6 +109,7 @@ const projectsData = [
       "Optimized database schema",
     ],
     image: "/images/project/library.png",
+    gitUrl: "https://github.com/kartikxisk/library-management-system",
   },
 ];
 
@@ -112,8 +141,8 @@ export const Projects = () => {
               key={project.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: index * 0.05, duration: 0.4 }}
             >
               <SpotlightCard className="h-full">
                 <div className="relative z-10">
@@ -125,7 +154,7 @@ export const Projects = () => {
                         alt={project.title}
                         width={600}
                         height={340}
-                        className="w-full h-64 object-cover object-top transition-transform duration-500 hover:scale-105"
+                        className="w-full h-64 object-cover object-top transition-transform duration-300 hover:scale-105 will-change-transform"
                       />
                       <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
                     </div>
@@ -141,10 +170,17 @@ export const Projects = () => {
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <button className="rounded-lg border border-white/10 bg-white/5 p-2 text-neutral-400 transition-colors hover:bg-white/10 hover:text-white">
-                        <Github className="h-4 w-4" />
-                      </button>
-                      {project.liveUrl ? (
+                      {project.gitUrl && (
+                        <a
+                          href={project.gitUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rounded-lg border border-white/10 bg-white/5 p-2 text-neutral-400 transition-colors hover:bg-white/10 hover:text-white"
+                        >
+                          <GithubIcon className="h-4 w-4" />
+                        </a>
+                      )}
+                      {project.liveUrl && (
                         <a
                           href={project.liveUrl}
                           target="_blank"
@@ -153,10 +189,6 @@ export const Projects = () => {
                         >
                           <ExternalLink className="h-4 w-4" />
                         </a>
-                      ) : (
-                        <button className="rounded-lg border border-white/10 bg-white/5 p-2 text-neutral-400 transition-colors hover:bg-white/10 hover:text-white">
-                          <ExternalLink className="h-4 w-4" />
-                        </button>
                       )}
                     </div>
                   </div>
