@@ -182,7 +182,6 @@ export const Hero = () => {
     "Frontend Developer",
     "React.js Developer",
     "Next.js Developer",
-    "LMS Specialist",
   ];
 
   return (
