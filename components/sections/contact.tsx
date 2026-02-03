@@ -40,7 +40,7 @@ export const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="relative py-24 px-4">
+    <section id="contact" className="relative py-24 md:mb-8 px-4">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -173,8 +173,9 @@ export const Contact = () => {
         <p className="text-sm text-neutral-500">
           © {new Date().getFullYear()} Kartik Kumar. Built with{" "}
           <GradientText>Next.js</GradientText>,{" "}
-          <GradientText>Tailwind CSS</GradientText>, and{" "}
-          <GradientText>Framer Motion</GradientText>.
+          <GradientText>Tailwind CSS</GradientText>,{" "}
+          <GradientText>Framer Motion</GradientText>, and{" "}
+          <GradientText>Aceternity UI</GradientText>.
         </p>
       </motion.div>
     </section>
