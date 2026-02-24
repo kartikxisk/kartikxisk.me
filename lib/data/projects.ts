@@ -1,3 +1,5 @@
+export type ProjectType = "portfolio" | "project";
+
 export interface Project {
   title: string;
   subtitle: string;
@@ -5,9 +7,16 @@ export interface Project {
   tech: string[];
   features: string[];
   image: string;
+  type: ProjectType;
   liveUrl?: string;
   gitUrl?: string;
 }
+
+export const projectTabs: { label: string; value: ProjectType | "all" }[] = [
+  { label: "All", value: "all" },
+  { label: "Portfolio", value: "portfolio" },
+  { label: "Projects", value: "project" },
+];
 
 export const projectsData: Project[] = [
   {
@@ -22,6 +31,7 @@ export const projectsData: Project[] = [
       "Responsive design",
     ],
     image: "/images/project/savantsolution.png",
+    type: "portfolio",
     liveUrl: "https://savantsolutions.in/",
   },
   {
@@ -36,6 +46,7 @@ export const projectsData: Project[] = [
       "Integrated ecosystem",
     ],
     image: "/images/project/belsync.png",
+    type: "portfolio",
     liveUrl: "https://www.belsync.com/",
   },
   {
@@ -58,10 +69,11 @@ export const projectsData: Project[] = [
       "Role-based access control",
     ],
     image: "/images/project/property-evaluation-system.png",
+    type: "project",
   },
   {
     title: "The Last Clicks",
-    subtitle: "Creative Services Agency",
+    subtitle: "Photography & Videography Portfolio",
     description:
       "A modern creative agency website showcasing photography, videography, and editing services. Features elegant dark theme design with smooth animations and a streamlined production process flow.",
     tech: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
@@ -71,6 +83,7 @@ export const projectsData: Project[] = [
       "Stats counter section",
     ],
     image: "/images/project/thelastclicks.png",
+    type: "portfolio",
     liveUrl: "https://thelastclicks.com/",
   },
   {
@@ -85,6 +98,7 @@ export const projectsData: Project[] = [
       "Investment process flow",
     ],
     image: "/images/project/zencapfund.png",
+    type: "portfolio",
     liveUrl: "https://zencapfund.com/",
   },
   {
@@ -99,6 +113,7 @@ export const projectsData: Project[] = [
       "Intuitive community discovery",
     ],
     image: "/images/project/groupsgyani.png",
+    type: "project",
     liveUrl: "https://groupsgyani.org/",
   },
   {
@@ -121,6 +136,7 @@ export const projectsData: Project[] = [
       "Optimized database schema",
     ],
     image: "/images/project/library.png",
+    type: "project",
     gitUrl: "https://github.com/kartikxisk/library-management-system",
   },
 ];

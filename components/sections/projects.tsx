@@ -1,12 +1,21 @@
 "use client";
+import { useState } from "react";
 import { SpotlightCard } from "@/components/ui/spotlight";
 import { GradientText } from "@/components/ui/text-reveal";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { ExternalLink, Github as GithubIcon } from "lucide-react";
 import Image from "next/image";
-import { projectsData } from "@/lib/data/projects";
+import { projectsData, projectTabs } from "@/lib/data/projects";
+import type { ProjectType } from "@/lib/data/projects";
 
 export const Projects = () => {
+  const [activeTab, setActiveTab] = useState<ProjectType | "all">("all");
+
+  const filteredProjects =
+    activeTab === "all"
+      ? projectsData
+      : projectsData.filter((p) => p.type === activeTab);
+
   return (
     <section id="projects" className="relative py-24 px-4">
       <div className="mx-auto max-w-6xl">
@@ -26,16 +35,42 @@ export const Projects = () => {
           <p className="mx-auto mt-4 max-w-xl text-neutral-400">
             A showcase of websites and applications I&apos;ve built for clients and personal projects
           </p>
+
+          {/* Tabs */}
+          <div className="mt-8 flex items-center justify-center gap-2">
+            {projectTabs.map((tab) => (
+              <button
+                key={tab.value}
+                onClick={() => setActiveTab(tab.value)}
+                className={`relative rounded-full px-5 py-2 text-sm font-medium transition-all duration-300 ${
+                  activeTab === tab.value
+                    ? "text-white"
+                    : "text-neutral-400 hover:text-neutral-200"
+                }`}
+              >
+                {activeTab === tab.value && (
+                  <motion.span
+                    layoutId="projectTab"
+                    className="absolute inset-0 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
+                  />
+                )}
+                <span className="relative z-10">{tab.label}</span>
+              </button>
+            ))}
+          </div>
         </motion.div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          {projectsData.map((project, index) => (
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.map((project, index) => (
             <motion.div
               key={project.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: index * 0.05, duration: 0.4 }}
+              layout
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ delay: index * 0.05, duration: 0.35 }}
             >
               <SpotlightCard className="h-full">
                 <div className="relative z-10">
@@ -121,6 +156,7 @@ export const Projects = () => {
               </SpotlightCard>
             </motion.div>
           ))}
+          </AnimatePresence>
         </div>
       </div>
     </section>
