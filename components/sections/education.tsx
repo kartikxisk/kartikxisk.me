@@ -3,25 +3,12 @@ import { GlowingCard } from "@/components/ui/glowing-card";
 import { GradientText } from "@/components/ui/text-reveal";
 import { motion } from "motion/react";
 import { GraduationCap, Award } from "lucide-react";
+import { educationData, type EducationItem } from "@/lib/data/education";
 
-const educationData = [
-  {
-    degree: "Bachelor of Science in Computer Science",
-    institution: "Ganga Institute of Technology & Management (Aff. MDU)",
-    location: "Haryana, IN",
-    period: "June 2021 - June 2024",
-    percentage: "69%",
-    icon: <GraduationCap className="h-6 w-6" />,
-  },
-  {
-    degree: "Diploma in Computer Science Engineering",
-    institution: "Guru Tegh Bahadur Polytechnic Institute (Aff. BTE)",
-    location: "New Delhi, IN",
-    period: "June 2019 - June 2021",
-    percentage: "86%",
-    icon: <Award className="h-6 w-6" />,
-  },
-];
+const iconMap: Record<EducationItem["iconName"], React.ReactNode> = {
+  GraduationCap: <GraduationCap className="h-6 w-6" />,
+  Award: <Award className="h-6 w-6" />,
+};
 
 export const Education = () => {
   return (
@@ -53,7 +40,7 @@ export const Education = () => {
             >
               <GlowingCard className="flex gap-6">
                 <div className="hidden shrink-0 items-center justify-center rounded-xl border border-white/10 bg-linear-to-br from-cyan-500/10 to-purple-500/10 w-20 h-20 sm:flex flex-none">
-                  <div className="text-cyan-400">{edu.icon}</div>
+                  <div className="text-cyan-400">{iconMap[edu.iconName]}</div>
                 </div>
                 <div className="flex-1">
                   <div className="mb-2 flex flex-wrap items-center justify-between gap-2">

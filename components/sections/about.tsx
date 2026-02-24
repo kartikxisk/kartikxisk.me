@@ -2,6 +2,7 @@
 import { GlowingCard } from "@/components/ui/glowing-card";
 import { GradientText } from "@/components/ui/text-reveal";
 import { motion } from "motion/react";
+import { aboutStats } from "@/lib/data/about";
 
 export const About = () => {
   return (
@@ -55,12 +56,7 @@ export const About = () => {
 
             {/* Stats */}
             <div className="mt-8 grid grid-cols-2 gap-4 border-t border-white/10 pt-8 md:grid-cols-4">
-              {[
-                { label: "Years Experience", value: "3+" },
-                { label: "Projects Completed", value: "20+" },
-                { label: "Technologies", value: "15+" },
-                { label: "Companies", value: "2" },
-              ].map((stat, index) => (
+              {aboutStats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
                   initial={{ opacity: 0, y: 20 }}

@@ -20,49 +20,43 @@ import {
   Building2,
   FileCode,
 } from "lucide-react";
+import {
+  skillCategories,
+  deviconMap,
+  lucideSkillIconMap,
+} from "@/lib/data/skills";
 
-// Skill icon mapping using Devicon classes
-const getSkillIcon = (skill: string): string | null => {
-  const iconMap: { [key: string]: string } = {
-    "JavaScript (ES6)": "devicon-javascript-plain",
-    "TypeScript": "devicon-typescript-plain",
-    "PHP": "devicon-php-plain",
-    "SQL": "devicon-azuresqldatabase-plain",
-    "React.js": "devicon-react-original",
-    "Next.js": "devicon-nextjs-plain",
-    "Redux": "devicon-redux-original",
-    "Tailwind CSS": "devicon-tailwindcss-original",
-    "MUI": "devicon-materialui-plain",
-    "jQuery": "devicon-jquery-plain",
-    "Bootstrap": "devicon-bootstrap-plain",
-    "Laravel": "devicon-laravel-original",
-    "Electron.js": "devicon-electron-original",
-    "MySQL": "devicon-mysql-original",
-    "Git": "devicon-git-plain",
-    "Postman": "devicon-postman-plain",
-    "AWS": "devicon-amazonwebservices-plain-wordmark",
-    "Docker": "devicon-docker-plain",
-  };
-  return iconMap[skill] || null;
+/** Resolve a Devicon class for a skill name, or null. */
+const getSkillIcon = (skill: string): string | null => deviconMap[skill] ?? null;
+
+/** Resolve a Lucide icon node for a skill name, or null. */
+const lucideIconComponents: Record<string, React.ReactNode> = {
+  Gauge: <Gauge className="h-4 w-4" />,
+  Monitor: <Monitor className="h-4 w-4" />,
+  Search: <Search className="h-4 w-4" />,
+  Webhook: <Webhook className="h-4 w-4" />,
+  Users: <Users className="h-4 w-4" />,
+  Bug: <Bug className="h-4 w-4" />,
+  HardDrive: <HardDrive className="h-4 w-4" />,
+  GraduationCap: <GraduationCap className="h-4 w-4" />,
+  FileCode: <FileCode className="h-4 w-4" />,
+  BookOpen: <BookOpen className="h-4 w-4" />,
+  Building2: <Building2 className="h-4 w-4" />,
 };
 
-// Lucide icons for skills without Devicon support
-const getLucideIcon = (skill: string) => {
-  const iconMap: { [key: string]: React.ReactNode } = {
-    "JMeter": <Gauge className="h-4 w-4" />,
-    "Lighthouse": <Gauge className="h-4 w-4" />,
-    "Chrome DevTools": <Monitor className="h-4 w-4" />,
-    "SEO": <Search className="h-4 w-4" />,
-    "REST APIs": <Webhook className="h-4 w-4" />,
-    "Agile/Scrum": <Users className="h-4 w-4" />,
-    "Profiling & Debugging": <Bug className="h-4 w-4" />,
-    "Caching Strategies": <HardDrive className="h-4 w-4" />,
-    "LMS Development": <GraduationCap className="h-4 w-4" />,
-    "SCORM Integration": <FileCode className="h-4 w-4" />,
-    "E-Learning Platforms": <BookOpen className="h-4 w-4" />,
-    "Enterprise Applications": <Building2 className="h-4 w-4" />,
-  };
-  return iconMap[skill] || null;
+const getLucideIcon = (skill: string): React.ReactNode | null => {
+  const name = lucideSkillIconMap[skill];
+  return name ? (lucideIconComponents[name] ?? null) : null;
+};
+
+/** Resolve category header icons by name. */
+const categoryIconComponents: Record<string, React.ReactNode> = {
+  Code2: <Code2 className="h-6 w-6" />,
+  Layers: <Layers className="h-6 w-6" />,
+  Database: <Database className="h-6 w-6" />,
+  Wrench: <Wrench className="h-6 w-6" />,
+  Lightbulb: <Lightbulb className="h-6 w-6" />,
+  Globe: <Globe className="h-6 w-6" />,
 };
 
 // Background SVG patterns for each card
@@ -124,92 +118,6 @@ const BackgroundPatterns = {
     </svg>
   ),
 };
-
-const skillCategories = [
-  {
-    title: "Languages",
-    icon: <Code2 className="h-6 w-6" />,
-    skills: ["JavaScript (ES6)", "TypeScript", "PHP", "SQL"],
-    gradient: "from-yellow-500/20 via-orange-500/10 to-transparent",
-    borderColor: "hover:border-yellow-500/50",
-    iconBg: "bg-yellow-500/10 text-yellow-400",
-    pattern: "grid",
-  },
-  {
-    title: "Technologies",
-    icon: <Layers className="h-6 w-6" />,
-    skills: [
-      "React.js",
-      "Next.js",
-      "Redux",
-      "Tailwind CSS",
-      "MUI",
-      "jQuery",
-      "Bootstrap",
-      "Laravel",
-      "Electron.js",
-    ],
-    gradient: "from-cyan-500/20 via-blue-500/10 to-transparent",
-    borderColor: "hover:border-cyan-500/50",
-    iconBg: "bg-cyan-500/10 text-cyan-400",
-    pattern: "dots",
-  },
-  {
-    title: "Databases",
-    icon: <Database className="h-6 w-6" />,
-    skills: ["MySQL"],
-    gradient: "from-green-500/20 via-emerald-500/10 to-transparent",
-    borderColor: "hover:border-green-500/50",
-    iconBg: "bg-green-500/10 text-green-400",
-    pattern: "waves",
-  },
-  {
-    title: "Tools",
-    icon: <Wrench className="h-6 w-6" />,
-    skills: [
-      "Git",
-      "JMeter",
-      "Lighthouse",
-      "Chrome DevTools",
-      "Postman",
-      "AWS",
-      "Docker",
-    ],
-    gradient: "from-purple-500/20 via-violet-500/10 to-transparent",
-    borderColor: "hover:border-purple-500/50",
-    iconBg: "bg-purple-500/10 text-purple-400",
-    pattern: "circuit",
-  },
-  {
-    title: "Concepts",
-    icon: <Lightbulb className="h-6 w-6" />,
-    skills: [
-      "SEO",
-      "REST APIs",
-      "Agile/Scrum",
-      "Profiling & Debugging",
-      "Caching Strategies",
-    ],
-    gradient: "from-pink-500/20 via-rose-500/10 to-transparent",
-    borderColor: "hover:border-pink-500/50",
-    iconBg: "bg-pink-500/10 text-pink-400",
-    pattern: "cross",
-  },
-  {
-    title: "Domain Expertise",
-    icon: <Globe className="h-6 w-6" />,
-    skills: [
-      "LMS Development",
-      "SCORM Integration",
-      "E-Learning Platforms",
-      "Enterprise Applications",
-    ],
-    gradient: "from-indigo-500/20 via-blue-500/10 to-transparent",
-    borderColor: "hover:border-indigo-500/50",
-    iconBg: "bg-indigo-500/10 text-indigo-400",
-    pattern: "hexagon",
-  },
-];
 
 // Skill Badge Component
 const SkillBadge = ({ skill }: { skill: string }) => {
@@ -280,7 +188,7 @@ const BentoCard = ({
               category.iconBg
             )}
           >
-            {category.icon}
+            {categoryIconComponents[category.iconName]}
           </div>
           <div>
             <h3 className="text-xl font-semibold text-white">{category.title}</h3>

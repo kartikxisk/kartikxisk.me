@@ -3,25 +3,26 @@ import { GlowingBorderCard } from "@/components/ui/glowing-card";
 import { GradientText } from "@/components/ui/text-reveal";
 import { motion } from "motion/react";
 import { Mail, Phone, Github, Linkedin, MapPin, Send } from "lucide-react";
+import { siteConfig } from "@/lib/data/site";
 
 export const Contact = () => {
   const contactInfo = [
     {
       icon: <Mail className="h-5 w-5" />,
       label: "Email",
-      value: "ki.kartik11@gmail.com",
-      href: "mailto:ki.kartik11@gmail.com",
+      value: siteConfig.email,
+      href: `mailto:${siteConfig.email}`,
     },
     {
       icon: <Phone className="h-5 w-5" />,
       label: "Phone",
-      value: "+91-8743870095",
-      href: "tel:+918743870095",
+      value: siteConfig.phone,
+      href: `tel:${siteConfig.phoneRaw}`,
     },
     {
       icon: <MapPin className="h-5 w-5" />,
       label: "Location",
-      value: "Delhi, India",
+      value: siteConfig.location,
       href: null,
     },
   ];
@@ -30,12 +31,12 @@ export const Contact = () => {
     {
       icon: <Github className="h-6 w-6" />,
       label: "GitHub",
-      href: "https://github.com/kartikxisk",
+      href: siteConfig.github,
     },
     {
       icon: <Linkedin className="h-6 w-6" />,
       label: "LinkedIn",
-      href: "https://linkedin.com/in/kartikxisk",
+      href: siteConfig.linkedin,
     },
   ];
 
@@ -137,7 +138,7 @@ export const Contact = () => {
                 possible.
               </p>
               <a
-                href="mailto:ki.kartik11@gmail.com?subject=Hello%20Kartik&body=Hi%20Kartik,%0D%0A%0D%0AI%20would%20like%20to%20discuss..."
+                href={`mailto:${siteConfig.email}?subject=Hello%20Kartik&body=Hi%20Kartik,%0D%0A%0D%0AI%20would%20like%20to%20discuss...`}
                 className="group relative overflow-hidden rounded-full bg-linear-to-r from-cyan-500 to-purple-500 px-8 py-3 font-medium text-white transition-all hover:shadow-lg hover:shadow-cyan-500/25"
               >
                 <span className="relative z-10 flex items-center gap-2">
@@ -149,7 +150,7 @@ export const Contact = () => {
               <p className="mt-6 text-sm text-neutral-500">
                 or reach out via{" "}
                 <a
-                  href="https://linkedin.com/in/kartikxisk"
+                  href={siteConfig.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-cyan-400 hover:underline"

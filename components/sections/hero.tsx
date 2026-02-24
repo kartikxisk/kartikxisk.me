@@ -5,6 +5,7 @@ import { TextReveal, GradientText } from "@/components/ui/text-reveal";
 import { motion, AnimatePresence } from "motion/react";
 import { Github, Linkedin, Mail, Phone, ChevronDown, Lightbulb } from "lucide-react";
 import { useScrollVisibility } from "@/lib/hooks/use-scroll-visibility";
+import { siteConfig } from "@/lib/data/site";
 
 // Focus Light Component - Modern Stage Spotlight with Physics-based beam
 const FocusLight = ({ 
@@ -178,11 +179,7 @@ export const Hero = () => {
     };
   }, [lightsOn]);
 
-  const roles = [
-    "Frontend Developer",
-    "React.js Developer",
-    "Next.js Developer",
-  ];
+  const roles = [...siteConfig.roles];
 
   return (
     <section
@@ -356,7 +353,7 @@ export const Hero = () => {
             className="mb-12 flex items-center justify-center gap-4"
           >
               <a
-                href="https://github.com/kartikxisk"
+                href={siteConfig.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative rounded-full border border-white/10 bg-white/5 p-3 transition-all hover:border-white/20 hover:bg-white/10"
@@ -367,7 +364,7 @@ export const Hero = () => {
                 </span>
               </a>
               <a
-                href="https://linkedin.com/in/kartikxisk"
+                href={siteConfig.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative rounded-full border border-white/10 bg-white/5 p-3 transition-all hover:border-white/20 hover:bg-white/10"
@@ -378,7 +375,7 @@ export const Hero = () => {
                 </span>
               </a>
               <a
-                href="mailto:ki.kartik11@gmail.com"
+                href={`mailto:${siteConfig.email}`}
                 className="group relative rounded-full border border-white/10 bg-white/5 p-3 transition-all hover:border-white/20 hover:bg-white/10"
               >
                 <Mail className="h-5 w-5 text-white" />
@@ -387,7 +384,7 @@ export const Hero = () => {
                 </span>
               </a>
               <a
-                href="tel:+918743870095"
+                href={`tel:${siteConfig.phoneRaw}`}
                 className="group relative rounded-full border border-white/10 bg-white/5 p-3 transition-all hover:border-white/20 hover:bg-white/10"
               >
                 <Phone className="h-5 w-5 text-white" />
