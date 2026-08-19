@@ -1,12 +1,10 @@
 export interface SkillCategory {
   title: string;
-  /** Lucide icon name */
-  iconName: string;
+  /** Parts-list code shown in the drafting label, e.g. LNG-01 */
+  code: string;
+  /** One line on how these are actually used. */
+  note: string;
   skills: string[];
-  gradient: string;
-  borderColor: string;
-  iconBg: string;
-  pattern: string;
 }
 
 /** Devicon class mapping for skills that have Devicon support */
@@ -29,6 +27,16 @@ export const deviconMap: Record<string, string> = {
   Postman: "devicon-postman-plain",
   AWS: "devicon-amazonwebservices-plain-wordmark",
   Docker: "devicon-docker-plain",
+  "Node.js": "devicon-nodejs-plain",
+  Express: "devicon-express-original",
+  MongoDB: "devicon-mongodb-plain",
+  Redis: "devicon-redis-plain",
+  Mongoose: "devicon-mongoose-original",
+  "Socket.IO": "devicon-socketio-original",
+  "Go (basics)": "devicon-go-original-wordmark",
+  Playwright: "devicon-playwright-plain",
+  pnpm: "devicon-pnpm-plain",
+  "GitHub Actions": "devicon-githubactions-plain",
 };
 
 /** Lucide icon name mapping for skills without Devicon support */
@@ -45,21 +53,29 @@ export const lucideSkillIconMap: Record<string, string> = {
   "SCORM Integration": "FileCode",
   "E-Learning Platforms": "BookOpen",
   "Enterprise Applications": "Building2",
+  BullMQ: "Layers",
+  Zod: "ShieldCheck",
+  "shadcn/ui": "Component",
+  Turborepo: "Boxes",
+  RBAC: "KeyRound",
+  "Queue Workers": "Layers",
+  "WCAG Accessibility": "Accessibility",
+  "Proctored Exams": "MonitorCheck",
+  "Multi-tenant SaaS": "Building2",
+  PM2: "Boxes",
 };
 
 export const skillCategories: SkillCategory[] = [
   {
     title: "Languages",
-    iconName: "Code2",
-    skills: ["JavaScript (ES6)", "TypeScript", "PHP", "SQL"],
-    gradient: "from-yellow-500/20 via-orange-500/10 to-transparent",
-    borderColor: "hover:border-yellow-500/50",
-    iconBg: "bg-yellow-500/10 text-yellow-400",
-    pattern: "grid",
+    code: "LNG-01",
+    note: "Day-to-day writing languages, typed where it counts.",
+    skills: ["JavaScript (ES6)", "TypeScript", "PHP", "SQL", "Go (basics)"],
   },
   {
     title: "Technologies",
-    iconName: "Layers",
+    code: "FRM-02",
+    note: "Frameworks and UI layers I ship features in.",
     skills: [
       "React.js",
       "Next.js",
@@ -70,24 +86,24 @@ export const skillCategories: SkillCategory[] = [
       "Bootstrap",
       "Laravel",
       "Electron.js",
+      "Node.js",
+      "Express",
+      "Socket.IO",
+      "BullMQ",
+      "Zod",
+      "shadcn/ui",
     ],
-    gradient: "from-cyan-500/20 via-blue-500/10 to-transparent",
-    borderColor: "hover:border-cyan-500/50",
-    iconBg: "bg-cyan-500/10 text-cyan-400",
-    pattern: "dots",
   },
   {
     title: "Databases",
-    iconName: "Database",
-    skills: ["MySQL"],
-    gradient: "from-green-500/20 via-emerald-500/10 to-transparent",
-    borderColor: "hover:border-green-500/50",
-    iconBg: "bg-green-500/10 text-green-400",
-    pattern: "waves",
+    code: "DAT-03",
+    note: "Schema design, indexing and query tuning.",
+    skills: ["MySQL", "MongoDB", "Redis", "Mongoose"],
   },
   {
     title: "Tools",
-    iconName: "Wrench",
+    code: "TLS-04",
+    note: "Build, debug, measure, deploy.",
     skills: [
       "Git",
       "JMeter",
@@ -96,39 +112,39 @@ export const skillCategories: SkillCategory[] = [
       "Postman",
       "AWS",
       "Docker",
+      "Turborepo",
+      "pnpm",
+      "Playwright",
+      "PM2",
+      "GitHub Actions",
     ],
-    gradient: "from-purple-500/20 via-violet-500/10 to-transparent",
-    borderColor: "hover:border-purple-500/50",
-    iconBg: "bg-purple-500/10 text-purple-400",
-    pattern: "circuit",
   },
   {
     title: "Concepts",
-    iconName: "Lightbulb",
+    code: "PRC-05",
+    note: "How the work gets planned, measured and kept fast.",
     skills: [
       "SEO",
       "REST APIs",
       "Agile/Scrum",
       "Profiling & Debugging",
       "Caching Strategies",
+      "RBAC",
+      "Queue Workers",
+      "WCAG Accessibility",
     ],
-    gradient: "from-pink-500/20 via-rose-500/10 to-transparent",
-    borderColor: "hover:border-pink-500/50",
-    iconBg: "bg-pink-500/10 text-pink-400",
-    pattern: "cross",
   },
   {
     title: "Domain Expertise",
-    iconName: "Globe",
+    code: "DOM-06",
+    note: "Where four years of context actually lives.",
     skills: [
       "LMS Development",
       "SCORM Integration",
       "E-Learning Platforms",
       "Enterprise Applications",
+      "Proctored Exams",
+      "Multi-tenant SaaS",
     ],
-    gradient: "from-indigo-500/20 via-blue-500/10 to-transparent",
-    borderColor: "hover:border-indigo-500/50",
-    iconBg: "bg-indigo-500/10 text-indigo-400",
-    pattern: "hexagon",
   },
 ];

@@ -1,15 +1,21 @@
 export { siteConfig } from "./site";
 export { projectsData, projectTabs } from "./projects";
 export { experienceData } from "./experience";
-export { educationData } from "./education";
+export { educationData, certifications } from "./education";
 export { skillCategories, deviconMap, lucideSkillIconMap } from "./skills";
-export { aboutStats } from "./about";
-export { navItems } from "./navigation";
+export { aboutStats, aboutIntro, aboutFacts } from "./about";
+export { navItems, sheetNo } from "./navigation";
+export { workSystems, workTotals } from "./work";
+export { services } from "./services";
+export { articles } from "./writing";
 
 export type { SiteConfig } from "./site";
 export type { Project, ProjectType } from "./projects";
 export type { ExperienceItem } from "./experience";
-export type { EducationItem } from "./education";
+export type { EducationItem, Certification } from "./education";
 export type { SkillCategory } from "./skills";
 export type { Stat } from "./about";
+export type { WorkSystem } from "./work";
+export type { Service } from "./services";
+export type { Article } from "./writing";
 export type { NavItem } from "./navigation";

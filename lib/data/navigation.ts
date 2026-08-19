@@ -1,16 +1,19 @@
 export interface NavItem {
   title: string;
-  /** Lucide icon name */
-  iconName: string;
+  /** Source-path style annotation shown in the section header. */
+  path: string;
   href: string;
 }
 
 export const navItems: NavItem[] = [
-  { title: "Home", iconName: "Home", href: "#home" },
-  { title: "About", iconName: "User", href: "#about" },
-  { title: "Skills", iconName: "Code2", href: "#skills" },
-  { title: "Experience", iconName: "Briefcase", href: "#experience" },
-  { title: "Projects", iconName: "FolderOpen", href: "#projects" },
-  { title: "Education", iconName: "GraduationCap", href: "#education" },
-  { title: "Contact", iconName: "Mail", href: "#contact" },
+  { title: "Index", path: "app/page.tsx", href: "#home" },
+  { title: "Profile", path: "lib/data/about.ts", href: "#about" },
+  { title: "Stack", path: "lib/data/skills.ts", href: "#skills" },
+  { title: "Work history", path: "lib/data/experience.ts", href: "#experience" },
+  { title: "Projects", path: "lib/data/projects.ts", href: "#projects" },
+  { title: "Education", path: "lib/data/education.ts", href: "#education" },
+  { title: "Contact", path: "lib/data/site.ts", href: "#contact" },
 ];
+
+/** Zero-padded sheet number for a section, e.g. 03. */
+export const sheetNo = (i: number) => String(i + 1).padStart(2, "0");

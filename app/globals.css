@@ -1,60 +1,260 @@
 @import "tailwindcss";
 
+/* ============================================================
+   Blueprint design tokens
+   Ink-slate paper, drafting amber annotation, one accent only.
+   ============================================================ */
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  /* surfaces */
+  --ink-900: oklch(0.145 0.012 250);
+  --ink-850: oklch(0.163 0.012 250);
+  --ink-800: oklch(0.185 0.012 250);
+  --ink-700: oklch(0.225 0.012 250);
+
+  /* drafting lines */
+  --line: oklch(0.74 0.022 250 / 0.19);
+  --line-soft: oklch(0.74 0.022 250 / 0.07);
+  --line-strong: oklch(0.8 0.02 250 / 0.32);
+  /* borders that carry meaning (buttons, controls) — 3.67:1 on --ink-900 */
+  --line-interactive: oklch(0.78 0.02 250 / 0.3);
+
+  /* ink */
+  --fg: oklch(0.94 0.006 250);
+  --fg-muted: oklch(0.71 0.012 250);
+  --fg-faint: oklch(0.60 0.012 250);
+
+  /* single accent — drafting amber */
+  --accent: oklch(0.76 0.145 62);
+  --accent-dim: oklch(0.66 0.12 62);
+  --accent-soft: oklch(0.76 0.145 62 / 0.12);
+  --accent-line: oklch(0.76 0.145 62 / 0.4);
+
+  /* status */
+  --live: oklch(0.78 0.16 150);
+
+  /* grid geometry */
+  --grid-minor: 24px;
+  --grid-major: 96px;
+
+  --background: var(--ink-900);
+  --foreground: var(--fg);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--ink-900);
+  --color-foreground: var(--fg);
+  --color-panel: var(--ink-850);
+  --color-raised: var(--ink-800);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-line-interactive: var(--line-interactive);
+  --color-muted: var(--fg-muted);
+  --color-faint: var(--fg-faint);
+  --color-accent: var(--accent);
+  --color-live: var(--live);
+
+  --font-display: var(--font-archivo), "Helvetica Neue", sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
-* {
-  box-sizing: border-box;
+@layer base {
+  * {
+    box-sizing: border-box;
+    min-width: 0;
+  }
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+section[id] {
+  scroll-margin-top: 6rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
-  min-height: 100vh;
+  background: var(--ink-900);
+  color: var(--fg);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-synthesis-weight: none;
+  min-height: 100dvh;
   overflow-x: hidden;
+  text-rendering: optimizeLegibility;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* ---------- typography primitives ---------- */
+h1, h2, h3 {
+  text-wrap: balance;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
 }
 
-::-webkit-scrollbar-track {
-  background: #0a0a0a;
+p {
+  text-wrap: pretty;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
+@layer components {
+  .u-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+  }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #444;
+/* small drafting label: 10px mono, wide tracked, uppercase */
+@layer components {
+  .u-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.2;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
 }
 
-/* Selection */
+@layer components {
+  .u-num {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  .u-measure {
+    max-width: 62ch;
+  }
+}
+
+/* ---------- blueprint surfaces ---------- */
+/* fine + major drafting grid, no mask soup — fades toward the page edges */
+@layer components {
+  .bp-grid {
+    background-image:
+      linear-gradient(to right, var(--line-soft) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line-soft) 1px, transparent 1px),
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size:
+      var(--grid-minor) var(--grid-minor),
+      var(--grid-minor) var(--grid-minor),
+      var(--grid-major) var(--grid-major),
+      var(--grid-major) var(--grid-major);
+  }
+}
+
+/* paper grain — breaks the digital flatness */
+@layer components {
+  .bp-grain::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* dashed leader line used for callouts + rules */
+@layer components {
+  .bp-leader {
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--line-strong) 0 4px,
+      transparent 4px 8px
+    );
+  }
+}
+
+@layer components {
+  .bp-tick {
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--line-strong) 0 1px,
+      transparent 1px var(--grid-minor)
+    );
+  }
+}
+
+/* ---------- interaction ---------- */
 ::selection {
-  background: rgba(34, 211, 238, 0.2);
-  color: #22d3ee;
+  background: var(--accent);
+  color: var(--ink-900);
 }
 
-/* Focus styles */
 :focus-visible {
-  outline: 2px solid rgba(34, 211, 238, 0.5);
+  outline: 2px solid var(--ink-900);
   outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--accent);
+  border-radius: 1px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ink-900);
+  border-left: 1px solid var(--line);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ink-700);
+  border: 2px solid var(--ink-900);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-dim);
+}
+
+/* hide scrollbar on opt-in horizontal strips */
+@layer components {
+  .no-bar {
+    scrollbar-width: none;
+  }
+}
+@layer components {
+  .no-bar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* minimum touch target — applied to compact controls */
+@layer components {
+  .tap-44 {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* skip link */
+@layer components {
+  .skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    transform: translateY(-200%);
+    transition: transform 150ms ease;
+  }
+}
+@layer components {
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+}
+
+/* ---------- motion safety ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

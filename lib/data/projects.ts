@@ -20,6 +20,58 @@ export const projectTabs: { label: string; value: ProjectType | "all" }[] = [
 
 export const projectsData: Project[] = [
   {
+    title: "Crysta",
+    subtitle: "B2B E-Commerce & Quotation Platform",
+    description:
+      "A wholesale e-commerce platform for premium kitchen and wardrobe accessories, built for dealers and fabricators. Combines a retail storefront with a B2B quote workflow, price-on-request items, downloadable catalogs, and Razorpay checkout.",
+    tech: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Razorpay",
+      "SEO",
+      "ISR Caching",
+    ],
+    features: [
+      "Quote cart with bulk RFQ flow",
+      "402-product catalogue with faceted filters",
+      "Customer accounts, orders & addresses",
+    ],
+    image: "/images/project/crysta.png",
+    type: "project",
+    liveUrl: "https://crysta.in/",
+  },
+  {
+    title: "VMD Events",
+    subtitle: "Brand Experience & Event Agency",
+    description:
+      "A Delhi-based brand experience agency website covering corporate events, artist management, manpower deployment, and fabrication & branding. Dark editorial design with a work showcase and an enquiry funnel.",
+    tech: ["Laravel", "Blade", "Vite", "Tailwind CSS", "JavaScript"],
+    features: [
+      "Service & case study showcase",
+      "Enquiry form with validation",
+      "SEO-optimised marketing pages",
+    ],
+    image: "/images/project/vmdevents.png",
+    type: "portfolio",
+    liveUrl: "https://vmdevents.com/",
+  },
+  {
+    title: "Vedang Homecare",
+    subtitle: "Home Healthcare Services Website",
+    description:
+      "A multi-city home healthcare website offering nursing, caregivers, ICU at home, doctor visits, and medical equipment rental. Bilingual (English/Hindi) with location-wise service pages and a lead capture flow.",
+    tech: ["Laravel", "Blade", "Alpine.js", "Tailwind CSS", "Hreflang i18n"],
+    features: [
+      "Bilingual EN/HI pages with hreflang",
+      "City-wise service landing pages",
+      "Enquiry & callback lead capture",
+    ],
+    image: "/images/project/vedanghomecare.png",
+    type: "portfolio",
+    liveUrl: "https://vedanghomecare.com/",
+  },
+  {
     title: "Savant Solutions",
     subtitle: "Business Consulting Platform",
     description:

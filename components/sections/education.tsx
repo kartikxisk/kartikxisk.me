@@ -1,70 +1,90 @@
 "use client";
-import { GlowingCard } from "@/components/ui/glowing-card";
-import { GradientText } from "@/components/ui/text-reveal";
-import { motion } from "motion/react";
-import { GraduationCap, Award } from "lucide-react";
-import { educationData, type EducationItem } from "@/lib/data/education";
-
-const iconMap: Record<EducationItem["iconName"], React.ReactNode> = {
-  GraduationCap: <GraduationCap className="h-6 w-6" />,
-  Award: <Award className="h-6 w-6" />,
-};
+import { certifications, educationData } from "@/lib/data/education";
+import { ArrowUpRight } from "lucide-react";
+import { Rule, SectionHead } from "@/components/ui/blueprint";
+import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
 
 export const Education = () => {
   return (
-    <section id="education" className="relative py-24 px-4">
-      <div className="mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
-        >
-          <span className="mb-4 inline-block rounded-full border border-green-500/30 bg-green-500/10 px-4 py-1 text-sm text-green-400">
-            Background
-          </span>
-          <h2 className="text-3xl font-bold text-white md:text-4xl">
-            Education
-          </h2>
-        </motion.div>
+    <section id="education" aria-labelledby="education-title" className="relative px-5 py-28 md:px-10 md:py-40">
+      <div className="mx-auto w-full max-w-[1440px] lg:pl-36">
+        <SectionHead
+          id="education-title"
+          index="06"
+          path="lib/data/education.ts"
+          title="Certification"
+          note="Degrees first, then the credentials — every certificate below links to its public verification page."
+        />
 
-        <div className="space-y-6">
-          {educationData.map((edu, index) => (
-            <motion.div
-              key={edu.degree}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2, duration: 0.5 }}
-            >
-              <GlowingCard className="flex gap-6">
-                <div className="hidden shrink-0 items-center justify-center rounded-xl border border-white/10 bg-linear-to-br from-cyan-500/10 to-purple-500/10 w-20 h-20 sm:flex flex-none">
-                  <div className="text-cyan-400">{iconMap[edu.iconName]}</div>
+        <div className="border-t border-[var(--line-strong)]">
+          {educationData.map((edu, i) => (
+            <Reveal key={edu.degree} delay={i * 0.06}>
+              <article className="grid gap-x-12 gap-y-4 border-b border-[var(--line)] py-8 md:grid-cols-[9rem_minmax(0,1fr)_7rem] md:py-10">
+                <p className="u-mono text-[0.75rem] tracking-[0.08em] text-[var(--accent)]">
+                  {edu.period}
+                </p>
+
+                <div>
+                  <h3 className="font-display text-xl font-medium tracking-[-0.02em] text-[var(--fg)] md:text-2xl">
+                    {edu.degree}
+                  </h3>
+                  <p className="mt-2 text-sm text-[var(--fg-muted)]">{edu.institution}</p>
+                  <p className="u-label mt-2 text-faint">{edu.location}</p>
                 </div>
-                <div className="flex-1">
-                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="text-lg font-semibold text-white">
-                      {edu.degree}
-                    </h3>
-                    <span className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs text-cyan-400">
-                      {edu.period}
-                    </span>
-                  </div>
-                  <p className="mb-2 text-neutral-400">{edu.institution}</p>
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-neutral-500">
-                    <span>{edu.location}</span>
-                    <span className="flex items-center gap-1">
-                      <span className="text-neutral-500">Score:</span>
-                      <GradientText className="font-semibold">
-                        {edu.percentage}
-                      </GradientText>
-                    </span>
-                  </div>
+
+                <div className="md:text-right">
+                  <p className="u-label text-faint">Score</p>
+                  <p className="mt-1 font-display text-3xl font-medium tracking-[-0.03em] text-[var(--fg)] u-num">
+                    {edu.percentage}
+                  </p>
                 </div>
-              </GlowingCard>
-            </motion.div>
+              </article>
+            </Reveal>
           ))}
+        </div>
+
+        {/* licenses & certifications */}
+        <div className="mt-20 md:mt-28">
+          <Rule note="verified credentials" />
+          <Stagger as="ul" className="mt-10 border-t border-[var(--line-strong)]" step={0.06}>
+            {certifications.map((cert) => (
+              <StaggerItem as="li" key={cert.credentialId} className="border-b border-[var(--line)]">
+                <a
+                  href={cert.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group grid gap-x-12 gap-y-3 py-7 md:grid-cols-[9rem_minmax(0,1fr)_auto]"
+                >
+                  <span className="u-mono text-[0.75rem] tracking-[0.08em] text-[var(--accent)]">
+                    {cert.issued}
+                  </span>
+
+                  <span>
+                    <span className="block font-display text-lg font-medium tracking-[-0.02em] text-[var(--fg)] transition-colors group-hover:text-[var(--accent)] md:text-xl">
+                      {cert.name}
+                      <span className="sr-only">— verify credential, opens in a new tab</span>
+                    </span>
+                    <span className="u-label mt-2 block text-faint">{cert.issuer}</span>
+                    <span className="u-mono mt-2 block text-[0.6875rem] text-[var(--fg-muted)]">
+                      ID {cert.credentialId}
+                    </span>
+                    <span className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+                      {cert.skills.map((skill) => (
+                        <span key={skill} className="u-mono text-[0.6875rem] text-[var(--fg-muted)]">
+                          {skill}
+                        </span>
+                      ))}
+                    </span>
+                  </span>
+
+                  <span className="u-label tap-44 flex items-center gap-2 text-[var(--fg-muted)] transition-colors group-hover:text-[var(--accent)] md:justify-self-end">
+                    Verify
+                    <ArrowUpRight aria-hidden className="h-3.5 w-3.5" />
+                  </span>
+                </a>
+              </StaggerItem>
+            ))}
+          </Stagger>
         </div>
       </div>
     </section>

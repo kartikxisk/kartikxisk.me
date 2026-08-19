@@ -1,439 +1,223 @@
 "use client";
-import { useState, useEffect } from "react";
-import { FlipWords } from "@/components/ui/flip-words";
-import { TextReveal, GradientText } from "@/components/ui/text-reveal";
-import { motion, AnimatePresence } from "motion/react";
-import { Github, Linkedin, Mail, Phone, ChevronDown, Lightbulb } from "lucide-react";
-import { useScrollVisibility } from "@/lib/hooks/use-scroll-visibility";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "motion/react";
+import { ArrowDown, ArrowUpRight, Github, Linkedin, Mail } from "lucide-react";
 import { siteConfig } from "@/lib/data/site";
+import { RevealWords } from "@/components/ui/reveal";
+import { Rule, StatusStamp } from "@/components/ui/blueprint";
 
-// Focus Light Component - Modern Stage Spotlight with Physics-based beam
-const FocusLight = ({ 
-  isOn, 
-  position 
-}: { 
-  isOn: boolean; 
-  position: 'left' | 'right';
-}) => {
-  const isLeft = position === 'left';
+/** Pointer crosshair with a live coordinate readout — drafting-cursor feel. */
+const Crosshair = ({ container }: { container: React.RefObject<HTMLElement | null> }) => {
+  const x = useMotionValue(-100);
+  const y = useMotionValue(-100);
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const [visible, setVisible] = useState(false);
+  const reduced = useReducedMotion();
+
+  // Listeners live on the section itself. An overlay div would sit on top of
+  // the buttons underneath it and swallow their clicks.
+  useEffect(() => {
+    const el = container.current;
+    if (!el || reduced) return;
+
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      const rect = el.getBoundingClientRect();
+      const px = Math.round(e.clientX - rect.left);
+      const py = Math.round(e.clientY - rect.top);
+      x.set(px);
+      y.set(py);
+      setCoords({ x: px, y: py });
+      setVisible(true);
+    };
+    const onLeave = () => setVisible(false);
+
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerleave", onLeave);
+    return () => {
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerleave", onLeave);
+    };
+  }, [container, reduced, x, y]);
+
+  if (reduced) return null;
 
   return (
-    <>
-      {/* Light beam with physics - narrow at source, wide at target */}
-      {isOn && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="pointer-events-none absolute inset-0 z-0"
-        >
-          {/* SVG for precise cone shape */}
-          <svg 
-            className="absolute inset-0 h-full w-full" 
-            style={{ overflow: 'visible' }}
-            viewBox="0 0 1600 800"
-            preserveAspectRatio="none"
-          >
-            <defs>
-              {/* Gradient that fades from light source to target */}
-              <linearGradient 
-                id={`beamGradient-${position}`} 
-                x1={isLeft ? "0%" : "100%"} 
-                y1="0%" 
-                x2="50%" 
-                y2="100%"
-              >
-                <stop offset="0%" stopColor="rgba(255, 250, 230, 0.2)" />
-                <stop offset="20%" stopColor="rgba(250, 204, 21, 0.1)" />
-                <stop offset="60%" stopColor="rgba(250, 204, 21, 0.04)" />
-                <stop offset="100%" stopColor="rgba(250, 204, 21, 0)" />
-              </linearGradient>
-              
-              {/* Heavy blur for soft volumetric look */}
-              <filter id={`beamBlur-${position}`} x="-100%" y="-100%" width="300%" height="300%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="25" />
-              </filter>
-              
-              <filter id={`beamBlur2-${position}`} x="-100%" y="-100%" width="300%" height="300%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="15" />
-              </filter>
-            </defs>
-            
-            {/* Outer glow cone - widest, most diffuse - pointing to center content */}
-            <motion.path
-              initial={{ opacity: 0, pathLength: 0 }}
-              animate={{ opacity: 1, pathLength: 1 }}
-              transition={{ duration: 0.8 }}
-              d={isLeft 
-                ? "M 80 70 Q 350 280, 550 480 L 850 480 Q 400 280, 80 70 Z"
-                : "M 1520 70 Q 1250 280, 1050 480 L 750 480 Q 1200 280, 1520 70 Z"
-              }
-              fill={`url(#beamGradient-${position})`}
-              filter={`url(#beamBlur-${position})`}
-              style={{ transformOrigin: isLeft ? '80px 70px' : '1520px 70px' }}
-            />
-            
-            {/* Inner brighter cone */}
-            <motion.path
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              d={isLeft 
-                ? "M 80 70 Q 380 300, 600 450 L 800 450 Q 420 300, 80 70 Z"
-                : "M 1520 70 Q 1120 300, 1000 450 L 800 450 Q 1100 300, 1520 70 Z"
-              }
-              fill="rgba(255, 248, 220, 0.06)"
-              filter={`url(#beamBlur2-${position})`}
-            />
-            
-            {/* Core bright line - the main visible beam */}
-            <motion.path
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.25 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              d={isLeft 
-                ? "M 80 70 Q 400 320, 650 420 L 780 420 Q 430 320, 80 70 Z"
-                : "M 1520 70 Q 1100 320, 950 420 L 820 420 Q 1070 320, 1520 70 Z"
-              }
-              fill="rgba(255, 255, 240, 0.05)"
-              filter={`url(#beamBlur2-${position})`}
-            />
-          </svg>
-        </motion.div>
-      )}
-
-      {/* Spotlight fixture */}
-      <div className={`absolute top-0 z-50 flex flex-col items-center ${isLeft ? 'left-6 md:left-12' : 'right-6 md:right-12'}`}>
-        {/* Ceiling mount */}
-        <div className="h-2 w-16 rounded-b bg-neutral-800 shadow-md" />
-        
-        {/* Mount arm */}
-        <div className="h-3 w-1 bg-gradient-to-b from-neutral-700 to-neutral-600" />
-        
-        {/* Light housing - angled toward center content */}
-        <div 
-          className="relative"
-          style={{ transform: isLeft ? 'rotate(-45deg)' : 'rotate(45deg)' }}
-        >
-          {/* Housing body */}
-          <div className="relative h-8 w-14 rounded-lg bg-gradient-to-b from-neutral-800 via-neutral-900 to-black shadow-xl">
-            {/* Top detail */}
-            <div className="absolute -top-1 left-2 right-2 w-1 rounded-t bg-neutral-700" />
-            
-            {/* Side ridges */}
-            <div className="absolute left-1 top-1.5 h-5 w-[2px] rounded bg-neutral-700" />
-            <div className="absolute right-1 top-1.5 h-5 w-[2px] rounded bg-neutral-700" />
-          </div>
-          
-          {/* Lens housing - pointing downward toward center */}
-          <div 
-            className={`absolute -bottom-5 left-1/2 -translate-x-1/2 h-6 w-8 rounded-b-lg transition-all duration-300 ${
-              isOn 
-                ? 'bg-gradient-to-b from-yellow-100 via-yellow-200 to-yellow-300 shadow-[0_8px_20px_8px_rgba(250,204,21,0.35)]' 
-                : 'bg-gradient-to-b from-neutral-600 to-neutral-700'
-            }`}
-          >
-            {/* Lens rings */}
-            {isOn && (
-              <>
-                <div className="absolute inset-x-1 top-1 h-[2px] rounded bg-yellow-100/50" />
-                <div className="absolute inset-x-2 top-2 h-[2px] rounded bg-white/30" />
-              </>
-            )}
-          </div>
-          
-          {/* Barn doors on sides */}
-          <div className="absolute -left-1 top-1 h-6 w-1 rounded bg-neutral-800" />
-          <div className="absolute -right-1 top-1 h-6 w-1 rounded bg-neutral-800" />
-        </div>
-      </div>
-    </>
+    <motion.div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 z-0 hidden md:block"
+      animate={{ opacity: visible ? 1 : 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      <motion.span
+        className="absolute top-0 h-full w-px bg-[var(--accent-line)]"
+        style={{ x }}
+      />
+      <motion.span
+        className="absolute left-0 h-px w-full bg-[var(--accent-line)]"
+        style={{ y }}
+      />
+      <motion.span
+        className="u-mono absolute text-[0.625rem] tracking-[0.15em] text-[var(--accent)]"
+        style={{ x, y }}
+      >
+        <span className="u-num ml-2 mt-2 inline-block">
+          x{String(coords.x).padStart(4, "0")} y{String(coords.y).padStart(4, "0")}
+        </span>
+      </motion.span>
+    </motion.div>
   );
 };
 
+const specs = [
+  { k: "Role", v: siteConfig.role },
+  { k: "Experience", v: "3+ years" },
+  { k: "Stack", v: "React · Next.js · TypeScript" },
+  { k: "Based in", v: `${siteConfig.location} · ${siteConfig.timezone}` },
+];
+
 export const Hero = () => {
-  const [lightsOn, setLightsOn] = useState(false);
-  const { isVisible, isAtTop } = useScrollVisibility();
-
-  // Keyboard shortcut to toggle lights (L key or Space)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'l' || e.key === 'L' || (!lightsOn && e.key === ' ')) {
-        e.preventDefault();
-        setLightsOn(prev => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightsOn]);
-
-  // Block scroll when lights are off
-  useEffect(() => {
-    if (lightsOn) {
-      document.body.style.overflow = 'auto';
-    } else {
-      document.body.style.overflow = 'hidden';
-    }
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [lightsOn]);
-
-  const roles = [...siteConfig.roles];
+  const ref = useRef<HTMLElement>(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  const nameY = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
     <section
       id="home"
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4"
+      ref={ref}
+      aria-labelledby="hero-title"
+      className="relative flex min-h-dvh flex-col justify-center overflow-hidden px-5 pb-24 pt-28 md:px-10"
     >
-      {/* Left Focus Light */}
-      <FocusLight isOn={lightsOn} position="left" />
-      
-      {/* Right Focus Light */}
-      <FocusLight isOn={lightsOn} position="right" />
+      <Crosshair container={ref} />
 
-      {/* Combined spotlight pool when lights are on */}
-      {lightsOn && (
+      <div className="relative z-10 mx-auto w-full max-w-[1440px] lg:pl-36">
+        {/* sheet meta line */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="pointer-events-none absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="flex flex-wrap items-center gap-x-6 gap-y-3"
         >
-          {/* Large ambient pool */}
-          <div 
-            className="absolute left-1/2 top-1/2 h-[700px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 transition-all duration-500"
-            style={{
-              background: 'radial-gradient(ellipse at center, rgba(250,204,21,0.1) 0%, rgba(250,204,21,0.04) 30%, rgba(250,204,21,0.01) 60%, transparent 80%)',
-              filter: 'blur(50px)',
-            }}
-          />
-          
-          {/* Medium glow */}
-          <div 
-            className="absolute left-1/2 top-1/2 h-[450px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-70 transition-all duration-500"
-            style={{
-              background: 'radial-gradient(ellipse at center, rgba(255,252,235,0.1) 0%, rgba(250,204,21,0.06) 40%, transparent 75%)',
-              filter: 'blur(30px)',
-            }}
-          />
-          
-          {/* Center hotspot */}
-          <div 
-            className="absolute left-1/2 top-1/2 h-[250px] w-[350px] -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-500"
-            style={{
-              background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.06) 0%, rgba(255,250,220,0.04) 50%, transparent 80%)',
-              filter: 'blur(20px)',
-            }}
-          />
+          <span className="u-label text-[var(--accent)]">{siteConfig.sheet.drawing}</span>
+          <span className="u-label text-faint">{siteConfig.sheet.revision}</span>
+          <span className="u-label hidden sm:inline text-faint">scale {siteConfig.sheet.scale}</span>
+          {siteConfig.availability.open && (
+            <StatusStamp label={siteConfig.availability.label} />
+          )}
         </motion.div>
-      )}
 
-      {/* Background gradient orbs */}
-      <motion.div
-        animate={{ opacity: lightsOn ? 0.1 : 0.02 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl" />
-      </motion.div>
-
-      {/* Light toggle button - only visible at top of page and not scrolling */}
-      <AnimatePresence>
-        {isAtTop && isVisible && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed left-1/2 top-6 z-[60] -translate-x-1/2 flex flex-col items-center"
-          >
-            {/* Pulsing glow ring when lights are off */}
-            {!lightsOn && (
-              <motion.div
-                animate={{ 
-                  opacity: [0, 0.6, 0],
-                  scale: [1, 1.8, 2.2],
-                }}
-                transition={{ 
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeOut"
-                }}
-                className="absolute inset-0 rounded-full bg-yellow-400/30 blur-md"
-              />
-            )}
-            
-            <motion.button
-              onClick={() => setLightsOn(!lightsOn)}
-              className={`relative rounded-full p-2 transition-all duration-300 ${
-                lightsOn
-                  ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/40 shadow-[0_0_15px_rgba(250,204,21,0.3)] hover:bg-yellow-500/30'
-                  : 'bg-neutral-900/80 text-neutral-400 border border-white/10 hover:bg-neutral-800 hover:text-white backdrop-blur-sm'
-              }`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              animate={!lightsOn ? { 
-                boxShadow: [
-                  '0 0 0 0 rgba(250, 204, 21, 0)',
-                  '0 0 20px 4px rgba(250, 204, 21, 0.3)',
-                  '0 0 0 0 rgba(250, 204, 21, 0)'
-                ]
-              } : {}}
-              transition={!lightsOn ? { duration: 2, repeat: Infinity, ease: "easeInOut" } : {}}
-            >
-              <Lightbulb className={`h-4 w-4 ${lightsOn ? 'fill-yellow-400' : ''}`} />
-            </motion.button>
-            
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: lightsOn ? 0 : 0.8 }}
-              transition={{ delay: 1, duration: 0.5 }}
-              className="mt-3 text-[10px] text-neutral-500 whitespace-nowrap"
-            >
-              Press <kbd className="px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400 font-mono text-[9px]">L</kbd> or click
-            </motion.span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Main content with opacity based on light */}
-      <motion.div
-        initial={{ opacity: 0.1 }}
-        animate={{ opacity: lightsOn ? 1 : 0.1 }}
-        transition={{ duration: 0.8 }}
-        className="relative z-10 text-center"
-      >
+        {/* dimension bracket above the name */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          aria-hidden
+          initial={{ opacity: 0, scaleX: 0.7 }}
+          animate={{ opacity: 1, scaleX: 1 }}
+          transition={{ duration: 1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-10 flex origin-left items-center gap-2 md:mt-14"
         >
-          {/* Greeting */}
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mb-4 text-lg text-neutral-400"
-          >
-            Hello, I&apos;m
-          </motion.p>
+          <span className="h-2.5 w-px bg-[var(--line-strong)]" />
+          <span className="bp-leader h-px w-full max-w-[36rem] opacity-70" />
+          <span className="h-2.5 w-px bg-[var(--line-strong)]" />
+        </motion.div>
 
-          {/* Name */}
-          <h1 className="mb-6 text-5xl font-bold tracking-tight text-white md:text-7xl">
-            <TextReveal text="Kartik Kumar" delay={0.3} />
-          </h1>
+        <motion.h1
+          style={reduced ? undefined : { y: nameY }}
+          id="hero-title"
+          className="mt-4 font-display text-[clamp(3rem,12vw,9.5rem)] font-semibold leading-[0.86] tracking-[-0.05em] text-[var(--fg)]"
+        >
+          <RevealWords text="Kartik Kumar" delay={0.2} />
+        </motion.h1>
 
-          {/* Role with FlipWords */}
-          <div className="mb-8 flex h-12 items-center justify-center text-2xl md:text-3xl overflow-hidden">
-            <span className="text-neutral-400">I&apos;m a </span>
-            <span className="ml-2 overflow-hidden">
-              <FlipWords words={roles} className="font-semibold" />
-            </span>
-          </div>
-
-          {/* Description */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="mx-auto mb-10 max-w-2xl text-lg text-neutral-400"
-          >
-            3+ years of experience building{" "}
-            <GradientText>scalable web applications</GradientText>, LMS solutions,
-            and e-learning platforms with{" "}
-            <GradientText>React.js & Next.js</GradientText>
-          </motion.p>
-
-          {/* Social links */}
+        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:items-end">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-            className="mb-12 flex items-center justify-center gap-4"
+            transition={{ duration: 0.8, delay: 0.9 }}
           >
+            <p className="u-measure text-lg leading-relaxed text-[var(--fg-muted)] md:text-xl">
+              I build learning platforms, exam portals and client web apps —
+              the kind with role permissions, SCORM players and dashboards that
+              stay fast once real data lands in them.
+            </p>
+
+            <div className="mt-9 flex flex-wrap items-center gap-3">
+              <a
+                href="#projects"
+                className="group u-label tap-44 flex items-center justify-center gap-2 bg-[var(--accent)] px-5 py-3 text-[var(--ink-900)] transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0"
+              >
+                View the work
+                <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="u-label tap-44 flex items-center gap-2 border border-[var(--line-interactive)] px-5 py-3 text-[var(--fg)] transition-colors duration-200 hover:border-[var(--accent-line)] hover:text-[var(--accent)] active:translate-y-px"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                {siteConfig.email}
+              </a>
               <a
                 href={siteConfig.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative rounded-full border border-white/10 bg-white/5 p-3 transition-all hover:border-white/20 hover:bg-white/10"
+                aria-label="GitHub profile"
+                className="tap-44 flex items-center justify-center border border-[var(--line-interactive)] text-[var(--fg-muted)] transition-colors hover:border-[var(--accent-line)] hover:text-[var(--accent)]"
               >
-                <Github className="h-5 w-5 text-white" />
-                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-neutral-500 opacity-0 transition-opacity group-hover:opacity-100">
-                  GitHub
-                </span>
+                <Github className="h-4 w-4" />
               </a>
               <a
                 href={siteConfig.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative rounded-full border border-white/10 bg-white/5 p-3 transition-all hover:border-white/20 hover:bg-white/10"
+                aria-label="LinkedIn profile"
+                className="tap-44 flex items-center justify-center border border-[var(--line-interactive)] text-[var(--fg-muted)] transition-colors hover:border-[var(--accent-line)] hover:text-[var(--accent)]"
               >
-                <Linkedin className="h-5 w-5 text-white" />
-                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-neutral-500 opacity-0 transition-opacity group-hover:opacity-100">
-                  LinkedIn
-                </span>
+                <Linkedin className="h-4 w-4" />
               </a>
-              <a
-                href={`mailto:${siteConfig.email}`}
-                className="group relative rounded-full border border-white/10 bg-white/5 p-3 transition-all hover:border-white/20 hover:bg-white/10"
-              >
-                <Mail className="h-5 w-5 text-white" />
-                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-neutral-500 opacity-0 transition-opacity group-hover:opacity-100">
-                  Email
-                </span>
-              </a>
-              <a
-                href={`tel:${siteConfig.phoneRaw}`}
-                className="group relative rounded-full border border-white/10 bg-white/5 p-3 transition-all hover:border-white/20 hover:bg-white/10"
-              >
-                <Phone className="h-5 w-5 text-white" />
-                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-neutral-500 opacity-0 transition-opacity group-hover:opacity-100">
-                  Call
-                </span>
-              </a>
-            </motion.div>
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2 }}
-            className="flex flex-col items-center justify-center gap-4 sm:flex-row"
-          >
-            <a
-              href="#experience"
-              className="group relative overflow-hidden rounded-full bg-linear-to-r from-cyan-500 to-purple-500 px-8 py-3 font-medium text-white transition-all hover:shadow-lg hover:shadow-cyan-500/25"
-            >
-              <span className="relative z-10">View My Work</span>
-              <div className="absolute inset-0 bg-linear-to-r from-purple-500 to-cyan-500 opacity-0 transition-opacity group-hover:opacity-100" />
-            </a>
-            <a
-              href="#contact"
-              className="rounded-full border border-white/20 bg-transparent px-8 py-3 font-medium text-white transition-all hover:bg-white/5"
-            >
-              Get In Touch
-            </a>
+            </div>
           </motion.div>
-        </motion.div>
-      </motion.div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: lightsOn ? 1 : 0.1 }}
-        transition={{ delay: 1.5, duration: 0.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          {/* spec table — reads like a drawing legend */}
+          <motion.dl
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.05 }}
+            className="border-t border-[var(--line)]"
+          >
+            {specs.map((s) => (
+              <div
+                key={s.k}
+                className="flex items-baseline justify-between gap-4 border-b border-[var(--line)] py-3"
+              >
+                <dt className="u-label text-faint">{s.k}</dt>
+                <dd className="u-mono text-right text-[0.8125rem] text-[var(--fg)]">
+                  {s.v}
+                </dd>
+              </div>
+            ))}
+          </motion.dl>
+        </div>
+
+        <Rule note="scroll to read the sheet" className="mt-16" />
+      </div>
+
+      <motion.a
+        href="#about"
+        style={reduced ? undefined : { opacity: fade }}
+        className="group u-label tap-44 absolute bottom-20 right-5 z-10 flex items-center justify-end gap-2 text-[var(--fg-faint)] transition-colors hover:text-[var(--accent)] md:right-10 lg:bottom-10"
       >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="flex flex-col items-center text-neutral-500"
-        >
-          <span className="mb-2 text-xs">Scroll Down</span>
-          <ChevronDown className="h-4 w-4" />
-        </motion.div>
-      </motion.div>
+        01 / 07
+        <ArrowDown className="h-3.5 w-3.5 animate-bounce group-hover:animate-none" />
+      </motion.a>
     </section>
   );
 };

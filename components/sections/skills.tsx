@@ -1,277 +1,148 @@
 "use client";
-import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
 import {
-  Code2,
-  Database,
-  Wrench,
-  Lightbulb,
-  Globe,
-  Layers,
-  Gauge,
-  Monitor,
-  Search,
-  Webhook,
-  Users,
+  Accessibility,
+  Boxes,
   Bug,
-  HardDrive,
-  GraduationCap,
-  BookOpen,
   Building2,
+  BookOpen,
+  Code2,
+  Component,
   FileCode,
+  Gauge,
+  GraduationCap,
+  HardDrive,
+  KeyRound,
+  Layers,
+  Monitor,
+  MonitorCheck,
+  Search,
+  ShieldCheck,
+  Users,
+  Webhook,
 } from "lucide-react";
 import {
-  skillCategories,
   deviconMap,
   lucideSkillIconMap,
+  skillCategories,
 } from "@/lib/data/skills";
+import { SectionHead } from "@/components/ui/blueprint";
+import { Reveal, ScrollStrip, Stagger, StaggerItem } from "@/components/ui/reveal";
+import { cn } from "@/lib/utils";
 
-/** Resolve a Devicon class for a skill name, or null. */
-const getSkillIcon = (skill: string): string | null => deviconMap[skill] ?? null;
-
-/** Resolve a Lucide icon node for a skill name, or null. */
-const lucideIconComponents: Record<string, React.ReactNode> = {
-  Gauge: <Gauge className="h-4 w-4" />,
-  Monitor: <Monitor className="h-4 w-4" />,
-  Search: <Search className="h-4 w-4" />,
-  Webhook: <Webhook className="h-4 w-4" />,
-  Users: <Users className="h-4 w-4" />,
-  Bug: <Bug className="h-4 w-4" />,
-  HardDrive: <HardDrive className="h-4 w-4" />,
-  GraduationCap: <GraduationCap className="h-4 w-4" />,
-  FileCode: <FileCode className="h-4 w-4" />,
-  BookOpen: <BookOpen className="h-4 w-4" />,
-  Building2: <Building2 className="h-4 w-4" />,
+const fallbackIcons: Record<string, React.ReactNode> = {
+  Gauge: <Gauge className="h-3.5 w-3.5" />,
+  Monitor: <Monitor className="h-3.5 w-3.5" />,
+  Search: <Search className="h-3.5 w-3.5" />,
+  Webhook: <Webhook className="h-3.5 w-3.5" />,
+  Users: <Users className="h-3.5 w-3.5" />,
+  Bug: <Bug className="h-3.5 w-3.5" />,
+  HardDrive: <HardDrive className="h-3.5 w-3.5" />,
+  GraduationCap: <GraduationCap className="h-3.5 w-3.5" />,
+  FileCode: <FileCode className="h-3.5 w-3.5" />,
+  BookOpen: <BookOpen className="h-3.5 w-3.5" />,
+  Building2: <Building2 className="h-3.5 w-3.5" />,
+  Layers: <Layers className="h-3.5 w-3.5" />,
+  ShieldCheck: <ShieldCheck className="h-3.5 w-3.5" />,
+  Component: <Component className="h-3.5 w-3.5" />,
+  Boxes: <Boxes className="h-3.5 w-3.5" />,
+  KeyRound: <KeyRound className="h-3.5 w-3.5" />,
+  Accessibility: <Accessibility className="h-3.5 w-3.5" />,
+  MonitorCheck: <MonitorCheck className="h-3.5 w-3.5" />,
 };
 
-const getLucideIcon = (skill: string): React.ReactNode | null => {
-  const name = lucideSkillIconMap[skill];
-  return name ? (lucideIconComponents[name] ?? null) : null;
-};
+const SkillIcon = ({ skill }: { skill: string }) => {
+  const devicon = deviconMap[skill];
+  if (devicon)
+    return <i aria-hidden className={cn(devicon, "text-base leading-none opacity-80")} />;
 
-/** Resolve category header icons by name. */
-const categoryIconComponents: Record<string, React.ReactNode> = {
-  Code2: <Code2 className="h-6 w-6" />,
-  Layers: <Layers className="h-6 w-6" />,
-  Database: <Database className="h-6 w-6" />,
-  Wrench: <Wrench className="h-6 w-6" />,
-  Lightbulb: <Lightbulb className="h-6 w-6" />,
-  Globe: <Globe className="h-6 w-6" />,
-};
-
-// Background SVG patterns for each card
-const BackgroundPatterns = {
-  grid: () => (
-    <svg className="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="grid-pattern" width="32" height="32" patternUnits="userSpaceOnUse">
-          <path d="M0 32V0h32" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-    </svg>
-  ),
-  dots: () => (
-    <svg className="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="dots-pattern" width="20" height="20" patternUnits="userSpaceOnUse">
-          <circle cx="2" cy="2" r="1" fill="rgba(34,211,238,0.1)" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#dots-pattern)" />
-    </svg>
-  ),
-  waves: () => (
-    <svg className="absolute inset-0 h-full w-full opacity-20" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <path fill="rgba(34,211,238,0.05)" d="M47.5,-57.2C59.9,-46.9,67.5,-30.8,70.8,-13.6C74.1,3.6,73.1,21.9,65.2,36.5C57.3,51.1,42.5,62,26.1,68.1C9.7,74.2,-8.3,75.5,-24.5,70.1C-40.7,64.7,-55.1,52.6,-64.3,37.3C-73.5,22,-77.5,3.5,-74.1,-13.3C-70.7,-30.1,-59.9,-45.2,-46,-56.1C-32.1,-67,-15.1,-73.7,1.3,-75.3C17.7,-76.9,35.1,-67.4,47.5,-57.2Z" transform="translate(100 100)" />
-    </svg>
-  ),
-  circuit: () => (
-    <svg className="absolute inset-0 h-full w-full opacity-10" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="circuit-pattern" width="50" height="50" patternUnits="userSpaceOnUse">
-          <circle cx="25" cy="25" r="2" fill="rgba(168,85,247,0.4)" />
-          <path d="M25 0v20M25 30v20M0 25h20M30 25h20" stroke="rgba(168,85,247,0.2)" strokeWidth="1" fill="none" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#circuit-pattern)" />
-    </svg>
-  ),
-  hexagon: () => (
-    <svg className="absolute inset-0 h-full w-full opacity-10" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="hex-pattern" width="56" height="100" patternUnits="userSpaceOnUse">
-          <path d="M28 66L0 50V16L28 0l28 16v34L28 66zm0-32L14 42V26l14-8 14 8v16L28 34z" fill="none" stroke="rgba(34,211,238,0.15)" strokeWidth="1" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#hex-pattern)" />
-    </svg>
-  ),
-  cross: () => (
-    <svg className="absolute inset-0 h-full w-full opacity-10" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="cross-pattern" width="24" height="24" patternUnits="userSpaceOnUse">
-          <path d="M12 0v24M0 12h24" stroke="rgba(236,72,153,0.15)" strokeWidth="1" fill="none" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#cross-pattern)" />
-    </svg>
-  ),
-};
-
-// Skill Badge Component
-const SkillBadge = ({ skill }: { skill: string }) => {
-  const deviconClass = getSkillIcon(skill);
-  const lucideIcon = getLucideIcon(skill);
-
+  const fallback = lucideSkillIconMap[skill];
   return (
-    <span className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-neutral-300 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-white/5 hover:scale-105">
-      {deviconClass ? (
-        <i className={`${deviconClass} text-lg`} />
-      ) : lucideIcon ? (
-        <span className="opacity-70">{lucideIcon}</span>
-      ) : (
-        <Code2 className="h-4 w-4 opacity-70" />
-      )}
-      {skill}
+    <span aria-hidden className="text-[var(--fg-faint)]">
+      {(fallback && fallbackIcons[fallback]) ?? <Code2 className="h-3.5 w-3.5" />}
     </span>
   );
 };
 
-// Bento Card Component
-const BentoCard = ({
-  category,
-  index,
-  className,
-}: {
-  category: (typeof skillCategories)[0];
-  index: number;
-  className?: string;
-}) => {
-  const Pattern = BackgroundPatterns[category.pattern as keyof typeof BackgroundPatterns];
+const allSkills = skillCategories.flatMap((c) => c.skills);
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      className={cn(
-        "group relative overflow-hidden rounded-2xl border border-white/10 bg-neutral-950/50 p-6 backdrop-blur-sm transition-all duration-500",
-        category.borderColor,
-        className
-      )}
-    >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-150">
-        <Pattern />
-      </div>
-
-      {/* Gradient Overlay */}
-      <div
-        className={cn(
-          "absolute inset-0 bg-linear-to-br opacity-0 transition-opacity duration-500 group-hover:opacity-100",
-          category.gradient
-        )}
-      />
-
-      {/* Glow Effect */}
-      <div className="absolute -inset-px rounded-2xl bg-linear-to-r from-transparent via-white/5 to-transparent opacity-0 blur-sm transition-opacity duration-500 group-hover:opacity-100" />
-
-      {/* Content */}
-      <div className="relative z-10">
-        {/* Header */}
-        <div className="mb-5 flex items-center gap-3">
-          <div
-            className={cn(
-              "flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 transition-all duration-300 group-hover:scale-110",
-              category.iconBg
-            )}
-          >
-            {categoryIconComponents[category.iconName]}
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold text-white">{category.title}</h3>
-            <p className="text-xs text-neutral-500">{category.skills.length} skills</p>
-          </div>
-        </div>
-
-        {/* Skills */}
-        <div className="flex flex-wrap gap-2">
-          {category.skills.map((skill) => (
-            <SkillBadge key={skill} skill={skill} />
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  );
-};
+const Ticker = ({ items, travel }: { items: string[]; travel: number }) => (
+  <ScrollStrip travel={travel} className="border-y border-[var(--line)] py-3">
+    {items.map((skill, i) => (
+      <span
+        key={`${skill}-${i}`}
+        className="u-mono flex shrink-0 items-center gap-2 whitespace-nowrap px-4 text-[0.75rem] text-[var(--fg-faint)]"
+      >
+        <span className="h-1 w-1 rounded-full bg-[var(--accent)] opacity-70" />
+        {skill}
+      </span>
+    ))}
+  </ScrollStrip>
+);
 
 export const Skills = () => {
   return (
-    <section id="skills" className="relative py-24 px-4 overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-purple-500/5 blur-3xl" />
-        <div className="absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-cyan-500/5 blur-3xl" />
+    <section id="skills" aria-labelledby="skills-title" className="relative px-5 py-28 md:px-10 md:py-40">
+      <div className="mx-auto w-full max-w-[1440px] lg:pl-36">
+        <SectionHead
+          id="skills-title"
+          index="03"
+          path="lib/data/skills.ts"
+          title="Parts list"
+          note="Everything here is in something I have shipped — not a list of things I have read about. Grouped the way I actually reach for them."
+        />
       </div>
 
-      <div className="relative mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
-        >
-          <span className="mb-4 inline-block rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1 text-sm text-purple-400">
-            Technical Skills
-          </span>
-          <h2 className="text-3xl font-bold text-white md:text-4xl">
-            My Tech Stack
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-neutral-400">
-            A curated collection of technologies and tools I use to build exceptional digital experiences
-          </p>
-        </motion.div>
+      {/* scroll-driven tickers, opposite directions */}
+      <div className="my-4 space-y-px">
+        <Ticker items={allSkills} travel={220} />
+        <Ticker items={[...allSkills].reverse()} travel={-220} />
+      </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          {/* Row 1 */}
-          <BentoCard 
-            category={skillCategories[0]} 
-            index={0} 
-            className="md:col-span-1"
-          />
-          <BentoCard 
-            category={skillCategories[1]} 
-            index={1} 
-            className="md:col-span-2"
-          />
-          <BentoCard 
-            category={skillCategories[2]} 
-            index={2} 
-            className="md:col-span-1"
-          />
-          
-          {/* Row 2 */}
-          <BentoCard 
-            category={skillCategories[3]} 
-            index={3} 
-            className="md:col-span-2"
-          />
-          <BentoCard 
-            category={skillCategories[4]} 
-            index={4} 
-            className="md:col-span-2"
-          />
-          
-          {/* Row 3 - Full width */}
-          <BentoCard 
-            category={skillCategories[5]} 
-            index={5} 
-            className="md:col-span-4"
-          />
+      <div className="mx-auto mt-16 w-full max-w-[1440px] md:mt-24 lg:pl-36">
+        <div className="border-t border-[var(--line-strong)]">
+          {skillCategories.map((category, i) => (
+            <Reveal key={category.title} delay={i * 0.04}>
+              <div
+                className={cn(
+                  "grid gap-y-5 border-b border-[var(--line)] py-8 md:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] md:gap-x-12 md:py-10",
+                  // asymmetric: alternate bands sit inset from the left rule
+                  i % 2 === 1 && "md:pl-12"
+                )}
+              >
+                <div>
+                  <div className="flex items-baseline gap-3">
+                    <span className="u-mono text-[0.625rem] tracking-[0.2em] text-[var(--accent)]">
+                      {category.code}
+                    </span>
+                    <span className="u-mono text-[0.625rem] text-[var(--fg-faint)] u-num">
+                      {String(category.skills.length).padStart(2, "0")} items
+                    </span>
+                  </div>
+                  <h3 className="mt-2 font-display text-2xl font-medium tracking-[-0.03em] text-[var(--fg)]">
+                    {category.title}
+                  </h3>
+                  <p className="mt-2 max-w-[28ch] text-sm leading-relaxed text-[var(--fg-muted)]">
+                    {category.note}
+                  </p>
+                </div>
+
+                <Stagger as="ul" className="flex flex-wrap gap-x-2 gap-y-2 md:items-start" step={0.03}>
+                  {category.skills.map((skill) => (
+                    <StaggerItem
+                      as="li"
+                      key={skill}
+                      className="group flex items-center gap-2 border border-[var(--line)] px-3 py-2 transition-colors duration-200 hover:border-[var(--accent-line)]"
+                    >
+                      <SkillIcon skill={skill} />
+                      <span className="u-mono text-[0.75rem] text-[var(--fg-muted)] transition-colors group-hover:text-[var(--fg)]">
+                        {skill}
+                      </span>
+                    </StaggerItem>
+                  ))}
+                </Stagger>
+              </div>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>

@@ -1,43 +1,87 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Archivo, IBM_Plex_Mono } from "next/font/google";
+import { siteConfig } from "@/lib/data/site";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
+
+const title = `${siteConfig.name} — ${siteConfig.role}`;
 
 export const metadata: Metadata = {
-  title: "Kartik Kumar | Frontend Developer",
-  description:
-    "Frontend Developer with 3+ years of experience in building scalable web applications, LMS solutions, and e-learning platforms. Specializing in React.js, Next.js, and TypeScript.",
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: title,
+    template: `%s — ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
   keywords: [
-    "Frontend Developer",
-    "React.js",
-    "Next.js",
+    "Frontend Engineer",
+    "React Developer",
+    "Next.js Developer",
     "TypeScript",
     "LMS Developer",
-    "Web Developer",
+    "SCORM",
+    "Delhi",
     "Kartik Kumar",
   ],
-  authors: [{ name: "Kartik Kumar" }],
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "Kartik Kumar | Frontend Developer",
-    description:
-      "Frontend Developer with 3+ years of experience building scalable web applications and LMS solutions.",
+    title,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    locale: "en_IN",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kartik Kumar | Frontend Developer",
-    description:
-      "Frontend Developer with 3+ years of experience building scalable web applications and LMS solutions.",
+    title,
+    description: siteConfig.description,
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
+};
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: siteConfig.name,
+  url: siteConfig.url,
+  jobTitle: siteConfig.role,
+  email: `mailto:${siteConfig.email}`,
+  telephone: siteConfig.phoneRaw,
+  address: { "@type": "PostalAddress", addressLocality: "Delhi", addressCountry: "IN" },
+  sameAs: [siteConfig.github, siteConfig.linkedin, siteConfig.medium],
+  knowsAbout: [
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Node.js",
+    "LMS",
+    "SCORM",
+    "Web performance",
+    "Technical SEO",
+    "Web accessibility",
+  ],
+  seeks: siteConfig.availability.open
+    ? { "@type": "Demand", name: "Frontend engineering roles and freelance projects" }
+    : undefined,
 };
 
 export default function RootLayout({
@@ -46,18 +90,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="" />
         <link
           rel="stylesheet"
-          type="text/css"
           href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
+        className={`${archivo.variable} ${plexMono.variable} bp-grain antialiased`}
       >
+        <a href="#main" className="skip-link u-label tap-44 flex items-center bg-[var(--accent)] px-4 text-[var(--ink-900)]">
+          Skip to content
+        </a>
         {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
       </body>
     </html>
   );
